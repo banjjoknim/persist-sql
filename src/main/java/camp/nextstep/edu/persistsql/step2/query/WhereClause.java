@@ -13,14 +13,14 @@ public class WhereClause {
     }
 
     public String createWhereQuery() {
-        StringBuilder whereQuery = new StringBuilder(" WHERE " + fieldName);
+        StringBuilder whereQuery = new StringBuilder(fieldName);
         if (value instanceof String) {
             return whereQuery.append(clauseType.buildWhereQuery("'" + value + "'")).toString();
         }
-        if (value instanceof Integer) {
+        if (value instanceof Number) {
             return whereQuery.append(clauseType.buildWhereQuery(value)).toString();
         }
-        throw new IllegalArgumentException("unsupported value type : " + value.getClass().getSimpleName());
+        throw new IllegalArgumentException("unsupported value type : " + value.getClass().getName());
     }
 
     public String getFieldName() {

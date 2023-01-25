@@ -20,7 +20,7 @@ public class SelectQueryBuilder<T> implements QueryBuilder<T> {
         Table table = clazz.getAnnotation(Table.class);
         List<String> columnNames = findColumnNames(clazz);
         StringBuilder queryBuilder = createQueryBuilder(table, columnNames);
-        appendWhereClauses(columnNames, whereClauses, queryBuilder);
+        appendWhereQueries(columnNames, whereClauses, queryBuilder);
 
         return queryBuilder.toString();
     }
@@ -44,7 +44,7 @@ public class SelectQueryBuilder<T> implements QueryBuilder<T> {
         return queryBuilder;
     }
 
-    private void appendWhereClauses(List<String> columnNames, List<WhereClause> whereClauses, StringBuilder queryBuilder) {
+    private void appendWhereQueries(List<String> columnNames, List<WhereClause> whereClauses, StringBuilder queryBuilder) {
         if (whereClauses.isEmpty()) {
             return;
         }
@@ -63,6 +63,7 @@ public class SelectQueryBuilder<T> implements QueryBuilder<T> {
     }
 
     private void appendWhereQuery(List<WhereClause> whereClauses, StringBuilder queryBuilder) {
+        queryBuilder.append(" WHERE ");
         for (WhereClause whereClause : whereClauses) {
             String whereQuery = whereClause.createWhereQuery();
             queryBuilder.append(whereQuery);
