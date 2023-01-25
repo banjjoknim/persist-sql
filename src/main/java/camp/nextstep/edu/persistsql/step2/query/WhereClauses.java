@@ -9,14 +9,17 @@ public class WhereClauses {
     private final List<WhereClause> whereClauses;
     private final List<WhereOperatorType> operatorTypes;
 
-    public WhereClauses(List<WhereClause> whereClauses, List<WhereOperatorType> operatorTypes) {
-        this.whereClauses = whereClauses;
-        this.operatorTypes = operatorTypes;
+    public WhereClauses() {
+        this(Collections.emptyList(), Collections.emptyList());
     }
 
     public WhereClauses(List<WhereClause> whereClauses) {
+        this(whereClauses, Collections.emptyList());
+    }
+
+    public WhereClauses(List<WhereClause> whereClauses, List<WhereOperatorType> operatorTypes) {
         this.whereClauses = whereClauses;
-        this.operatorTypes = Collections.emptyList();
+        this.operatorTypes = operatorTypes;
     }
 
     public boolean isEmpty() {
