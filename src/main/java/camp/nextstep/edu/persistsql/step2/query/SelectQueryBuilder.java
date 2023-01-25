@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class SelectQueryBuilder<T> implements QueryBuilder<T> {
 
     @Override
-    public String buildQuery(Class<T> clazz) {
+    public String buildQuery(Class<T> clazz, List<WhereClause> whereClauses) {
         boolean isEntity = clazz.isAnnotationPresent(Entity.class);
         if (!isEntity) {
             throw new IllegalArgumentException("clazz has not Entity annotation.");
@@ -20,6 +20,7 @@ public class SelectQueryBuilder<T> implements QueryBuilder<T> {
         Table table = clazz.getAnnotation(Table.class);
         List<String> columnNames = findColumnNames(clazz);
         StringBuilder queryBuilder = createQueryBuilder(table, columnNames);
+        appendWhereClauses(columnNames, whereClauses, queryBuilder);
 
         return queryBuilder.toString();
     }
@@ -41,5 +42,30 @@ public class SelectQueryBuilder<T> implements QueryBuilder<T> {
         queryBuilder.append(" FROM ");
         queryBuilder.append(table.name());
         return queryBuilder;
+    }
+
+    private void appendWhereClauses(List<String> columnNames, List<WhereClause> whereClauses, StringBuilder queryBuilder) {
+        if (whereClauses.isEmpty()) {
+            return;
+        }
+        validateWhereClausFieldNames(columnNames, whereClauses);
+        appendWhereQuery(whereClauses, queryBuilder);
+    }
+
+    private void validateWhereClausFieldNames(List<String> columnNames, List<WhereClause> whereClauses) {
+        List<String> whereClauseFieldNames = whereClauses.stream()
+            .map(WhereClause::getFieldName)
+            .collect(Collectors.toList());
+        boolean isValidFieldNames = columnNames.containsAll(whereClauseFieldNames);
+        if (!isValidFieldNames) {
+            throw new IllegalArgumentException("where clauses contains invalid fields : " + whereClauseFieldNames);
+        }
+    }
+
+    private void appendWhereQuery(List<WhereClause> whereClauses, StringBuilder queryBuilder) {
+        for (WhereClause whereClause : whereClauses) {
+            String whereQuery = whereClause.createWhereQuery();
+            queryBuilder.append(whereQuery);
+        }
     }
 }
