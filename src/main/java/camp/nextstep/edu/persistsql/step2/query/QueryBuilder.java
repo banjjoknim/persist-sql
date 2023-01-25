@@ -1,6 +1,8 @@
 package camp.nextstep.edu.persistsql.step2.query;
 
-public interface QueryBuilder<T> {
+import camp.nextstep.edu.persistsql.step2.support.EntitySqlBuilder;
 
-    public String buildQuery(Class<T> clazz, WhereClauses whereClauses);
+public interface QueryBuilder<T> extends EntitySqlBuilder<T> {
+
+    String buildQuery(Class<T> clazz, WhereClauses whereClauses);
 }
