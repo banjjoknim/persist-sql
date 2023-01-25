@@ -18,7 +18,7 @@ class SelectQueryBuilderTest {
         Class<Person> clazz = Person.class;
 
         SelectQueryBuilder<Person> queryBuilder = new SelectQueryBuilder<>();
-        String query = queryBuilder.buildQuery(clazz, Collections.emptyList());
+        String query = queryBuilder.buildQuery(clazz, new WhereClauses(Collections.emptyList()));
 
         assertThat(query).isEqualTo("SELECT id, name, age FROM PERSON");
     }
@@ -30,7 +30,7 @@ class SelectQueryBuilderTest {
 
         List<WhereClause> whereClauses = Arrays.asList(new WhereClause("id", 1L, WhereClauseType.EQUAL));
         SelectQueryBuilder<Person> queryBuilder = new SelectQueryBuilder<>();
-        String query = queryBuilder.buildQuery(clazz, whereClauses);
+        String query = queryBuilder.buildQuery(clazz, new WhereClauses(whereClauses));
 
         assertThat(query).isEqualTo("SELECT id, name, age FROM PERSON WHERE id = 1");
     }
@@ -42,7 +42,7 @@ class SelectQueryBuilderTest {
 
         List<WhereClause> whereClauses = Arrays.asList(new WhereClause("name", "%banjjoknim%", WhereClauseType.LIKE));
         SelectQueryBuilder<Person> queryBuilder = new SelectQueryBuilder<>();
-        String query = queryBuilder.buildQuery(clazz, whereClauses);
+        String query = queryBuilder.buildQuery(clazz, new WhereClauses(whereClauses));
 
         assertThat(query).isEqualTo("SELECT id, name, age FROM PERSON WHERE name LIKE %banjjoknim%");
     }
@@ -54,7 +54,7 @@ class SelectQueryBuilderTest {
 
         List<WhereClause> whereClauses = Arrays.asList(new WhereClause("id", 1L, WhereClauseType.IN));
         SelectQueryBuilder<Person> queryBuilder = new SelectQueryBuilder<>();
-        String query = queryBuilder.buildQuery(clazz, whereClauses);
+        String query = queryBuilder.buildQuery(clazz, new WhereClauses(whereClauses));
 
         assertThat(query).isEqualTo("SELECT id, name, age FROM PERSON WHERE id IN (1)");
     }
@@ -66,7 +66,7 @@ class SelectQueryBuilderTest {
 
         List<WhereClause> whereClauses = Arrays.asList(new WhereClause("id", 1L, WhereClauseType.NOT_IN));
         SelectQueryBuilder<Person> queryBuilder = new SelectQueryBuilder<>();
-        String query = queryBuilder.buildQuery(clazz, whereClauses);
+        String query = queryBuilder.buildQuery(clazz, new WhereClauses(whereClauses));
 
         assertThat(query).isEqualTo("SELECT id, name, age FROM PERSON WHERE id NOT IN (1)");
     }

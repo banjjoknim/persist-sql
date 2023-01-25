@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class SelectQueryBuilder<T> implements QueryBuilder<T> {
 
     @Override
-    public String buildQuery(Class<T> clazz, List<WhereClause> whereClauses) {
+    public String buildQuery(Class<T> clazz, WhereClauses whereClauses) {
         boolean isEntity = clazz.isAnnotationPresent(Entity.class);
         if (!isEntity) {
             throw new IllegalArgumentException("clazz has not Entity annotation.");
@@ -44,29 +44,19 @@ public class SelectQueryBuilder<T> implements QueryBuilder<T> {
         return queryBuilder;
     }
 
-    private void appendWhereQueries(List<String> columnNames, List<WhereClause> whereClauses, StringBuilder queryBuilder) {
+    private void appendWhereQueries(List<String> columnNames, WhereClauses whereClauses, StringBuilder queryBuilder) {
         if (whereClauses.isEmpty()) {
             return;
         }
         validateWhereClausFieldNames(columnNames, whereClauses);
-        appendWhereQuery(whereClauses, queryBuilder);
+        queryBuilder.append(whereClauses.buildWhereQuery());
     }
 
-    private void validateWhereClausFieldNames(List<String> columnNames, List<WhereClause> whereClauses) {
-        List<String> whereClauseFieldNames = whereClauses.stream()
-            .map(WhereClause::getFieldName)
-            .collect(Collectors.toList());
+    private void validateWhereClausFieldNames(List<String> columnNames, WhereClauses whereClauses) {
+        List<String> whereClauseFieldNames = whereClauses.getFieldNames();
         boolean isValidFieldNames = columnNames.containsAll(whereClauseFieldNames);
         if (!isValidFieldNames) {
             throw new IllegalArgumentException("where clauses contains invalid fields : " + whereClauseFieldNames);
-        }
-    }
-
-    private void appendWhereQuery(List<WhereClause> whereClauses, StringBuilder queryBuilder) {
-        queryBuilder.append(" WHERE ");
-        for (WhereClause whereClause : whereClauses) {
-            String whereQuery = whereClause.createWhereQuery();
-            queryBuilder.append(whereQuery);
         }
     }
 }
