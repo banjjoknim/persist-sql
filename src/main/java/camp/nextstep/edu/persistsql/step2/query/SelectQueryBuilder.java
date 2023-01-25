@@ -30,6 +30,7 @@ public class SelectQueryBuilder<T> implements QueryBuilder<T> {
         queryBuilder.append(String.join(", ", columnNames));
         queryBuilder.append(" FROM ");
         queryBuilder.append(table.name());
+
         return queryBuilder.toString();
     }
 }
