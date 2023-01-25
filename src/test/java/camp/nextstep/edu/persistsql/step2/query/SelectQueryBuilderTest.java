@@ -44,7 +44,7 @@ class SelectQueryBuilderTest {
         SelectQueryBuilder<Person> queryBuilder = new SelectQueryBuilder<>();
         String query = queryBuilder.buildQuery(clazz, new WhereClauses(whereClauses));
 
-        assertThat(query).isEqualTo("SELECT id, name, age FROM PERSON WHERE name LIKE %banjjoknim%");
+        assertThat(query).isEqualTo("SELECT id, name, age FROM PERSON WHERE name LIKE '%banjjoknim%'");
     }
 
     @DisplayName("요구사항 1 - select + where in 쿼리 만들어보기")
