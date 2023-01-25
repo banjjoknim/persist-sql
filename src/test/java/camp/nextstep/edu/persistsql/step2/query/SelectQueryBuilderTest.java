@@ -4,6 +4,7 @@ import camp.nextstep.edu.persistsql.step2.domain.Person;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -69,5 +70,20 @@ class SelectQueryBuilderTest {
         String query = queryBuilder.buildQuery(clazz, new WhereClauses(whereClauses));
 
         assertThat(query).isEqualTo("SELECT id, name, age FROM PERSON WHERE id NOT IN (1)");
+    }
+
+    @DisplayName("요구사항 1 - select + 다중 where 쿼리 만들어보기")
+    @Test
+    void buildSelectMultiWhereClauseQueryTest() {
+        Class<Person> clazz = Person.class;
+
+        WhereClause idEqualWhereClause = new WhereClause("id", 1L, WhereClauseType.EQUAL);
+        WhereClause nameEqualWhereClause = new WhereClause("name", "banjjoknim", WhereClauseType.EQUAL);
+        List<WhereClause> whereClauses = new ArrayList<>(Arrays.asList(idEqualWhereClause, nameEqualWhereClause));
+        List<WhereOperatorType> whereOperatorTypes = new ArrayList<>(Arrays.asList(WhereOperatorType.AND));
+        SelectQueryBuilder<Person> queryBuilder = new SelectQueryBuilder<>();
+        String query = queryBuilder.buildQuery(clazz, new WhereClauses(whereClauses, whereOperatorTypes));
+
+        assertThat(query).isEqualTo("SELECT id, name, age FROM PERSON WHERE id = 1 AND name = 'banjjoknim'");
     }
 }
