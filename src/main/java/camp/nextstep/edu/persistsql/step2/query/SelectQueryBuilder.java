@@ -45,7 +45,7 @@ public class SelectQueryBuilder<T> implements QueryBuilder<T> {
     }
 
     private void appendWhereQueries(List<String> columnNames, WhereClauses whereClauses, StringBuilder queryBuilder) {
-        if (whereClauses.isEmpty()) {
+        if (whereClauses == null || whereClauses.isEmpty()) {
             return;
         }
         validateWhereClausFieldNames(columnNames, whereClauses);
